@@ -9,7 +9,8 @@ import NotesScreen from './screens/NotesScreen';
 import { ClientsProvider } from './contexts/ClientsContext';
 import { TasksProvider } from './contexts/TasksContext';
 import GroupTrackingScreen from './screens/GroupTrackingScreen';
-
+import ReportsScreen from './screens/ReportsScreen';
+import GoalsScreen from './screens/GoalsScreen';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -25,6 +26,8 @@ export default function App() {
             <Stack.Screen name="SessionTaskList" component={SessionTaskListScreen} />
             <Stack.Screen name="Notes" component={NotesScreen} />
             <Stack.Screen name="GroupTracking" component={GroupTrackingScreen} />
+            <Stack.Screen name="Reports" component={ReportsScreen} />
+            <Stack.Screen name="Goals" component={GoalsScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </TasksProvider>

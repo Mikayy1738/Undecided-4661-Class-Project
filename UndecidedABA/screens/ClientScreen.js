@@ -15,6 +15,14 @@ export default function ClientScreen({ route, navigation }) {
     navigation.navigate('GroupTracking', { client });
   };
 
+  const handleNavigateToReports = () => {
+    navigation.navigate('Reports', { client });
+  };
+
+  const handleNavigateToGoals = () => {
+    navigation.navigate('Goals', { client });
+  };
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
@@ -62,6 +70,25 @@ export default function ClientScreen({ route, navigation }) {
           activeOpacity={0.7}
         >
           <Text style={styles.optionCardText}>Group Tracking</Text>
+          <Text style={styles.optionCardArrow}>→</Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          style={styles.optionCard}
+          onPress={handleNavigateToReports}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.optionCardText}>Reports</Text>
+          <Text style={styles.optionCardArrow}>→</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.optionCard}
+          onPress={handleNavigateToGoals}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.optionCardText}>Goals</Text>
           <Text style={styles.optionCardArrow}>→</Text>
         </TouchableOpacity>
       </View>

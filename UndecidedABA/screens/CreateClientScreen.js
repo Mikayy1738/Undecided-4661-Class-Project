@@ -128,6 +128,7 @@ export default function CreateClientScreen({ navigation }) {
             <Text style={styles.saveButtonText}>Save</Text>
           </TouchableOpacity>
         </View>
+        
       </View>
     </ScrollView>
   );
