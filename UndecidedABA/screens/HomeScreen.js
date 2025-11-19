@@ -10,7 +10,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   const handleClientPress = (client) => {
-    navigation.navigate('SessionTaskList', { client });
+    navigation.navigate('Client', { client });
   };
 
   return (
@@ -20,9 +20,6 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.title}>Home Page</Text>
           <Text style={styles.subtitle}>Welcome to the ABA Dashboard!</Text>
         </View>
-        <TouchableOpacity style={styles.button} onPress={handleCreateClient}>
-          <Text style={styles.buttonText}>+</Text>
-        </TouchableOpacity>
       </View>
       
       <View style={styles.clientsSection}>
@@ -46,13 +43,21 @@ export default function HomeScreen({ navigation }) {
                   </View>
                   <View style={styles.cardInfo}>
                     <Text style={styles.cardText}>{client.name}</Text>
-                    <Text style={styles.cardSubtext}>Age: {client.age}</Text>
+                    {client.DOB && <Text style={styles.cardSubtext}>DOB: {client.DOB}</Text>}
+                    {client.idNumber && <Text style={styles.cardSubtext}>ID: {client.idNumber}</Text>}
+                    {client.insuranceProvider && <Text style={styles.cardSubtext}>Insurance: {client.insuranceProvider}</Text>}
                   </View>
                 </View>
               </TouchableOpacity>
             ))
           )}
         </ScrollView>
+      </View>
+      
+      <View style={styles.addButtonContainer}>
+        <TouchableOpacity style={styles.addButton} onPress={handleCreateClient}>
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -64,9 +69,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
     paddingTop: 60,
     paddingHorizontal: 20,
     paddingBottom: 24,
@@ -84,15 +86,27 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#6b7280',
   },
-  button: {
+  addButtonContainer: {
+    position: 'absolute',
+    bottom: 24,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  addButton: {
     backgroundColor: '#111827',
     width: 56,
     height: 56,
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 8,
   },
-  buttonText: {
+  addButtonText: {
     color: '#fff',
     fontSize: 32,
     fontWeight: '300',
@@ -117,7 +131,7 @@ const styles = StyleSheet.create({
   cardsContainer: {
     width: '100%',
     alignItems: 'center',
-    paddingBottom: 20,
+    paddingBottom: 100,
   },
   card: {
     backgroundColor: '#fff',
