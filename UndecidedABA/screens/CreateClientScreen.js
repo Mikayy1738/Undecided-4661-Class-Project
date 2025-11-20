@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useClients } from '../contexts/ClientsContext';
+import { useClients } from '../contexts';
 
 export default function CreateClientScreen({ navigation }) {
   const { addClient } = useClients();

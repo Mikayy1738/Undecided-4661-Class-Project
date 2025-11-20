@@ -1,9 +1,24 @@
 // src/screens/HomeScreen.js
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useClients } from '../contexts/ClientsContext';
+import { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useClients, useAuth } from '../contexts';
 
 export default function HomeScreen({ navigation }) {
   const { clients } = useClients();
+  const { currentUser, logout } = useAuth();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  
+  const getUserName = () => {
+    if (!currentUser?.email) return 'User';
+    const emailName = currentUser.email.split('@')[0];
+    return emailName.charAt(0).toUpperCase() + emailName.slice(1);
+  };
+
+  const getUserInitial = () => {
+    if (!currentUser?.email) return 'U';
+    return currentUser.email.charAt(0).toUpperCase();
+  };
 
   const handleCreateClient = () => {
     navigation.navigate('CreateClient');
@@ -13,12 +28,65 @@ export default function HomeScreen({ navigation }) {
     navigation.navigate('Client', { client });
   };
 
+  const handleSignOut = () => {
+    setDropdownVisible(false);
+    logout();
+    navigation.replace('Login');
+  };
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
+  const closeDropdown = () => {
+    setDropdownVisible(false);
+  };
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <View style={styles.headerText}>
-          <Text style={styles.title}>Home Page</Text>
-          <Text style={styles.subtitle}>Welcome to the ABA Dashboard!</Text>
+        <View style={styles.headerContent}>
+          <View style={styles.profileButtonContainer}>
+            <TouchableOpacity style={styles.profileButton} onPress={toggleDropdown}>
+              <View style={styles.profileIconSmall}>
+                <Text style={styles.profileIconText}>{getUserInitial()}</Text>
+              </View>
+            </TouchableOpacity>
+            {dropdownVisible && (
+              <Modal
+                transparent={true}
+                visible={dropdownVisible}
+                animationType="fade"
+                onRequestClose={closeDropdown}
+              >
+                <TouchableWithoutFeedback onPress={closeDropdown}>
+                  <View style={styles.dropdownOverlay}>
+                    <TouchableWithoutFeedback>
+                      <View style={[styles.dropdownMenu, styles.shadowMedium]}>
+                        <View style={styles.dropdownHeader}>
+                          <View style={[styles.profileIconSmall, { marginRight: 12 }]}>
+                            <Text style={styles.profileIconText}>{getUserInitial()}</Text>
+                          </View>
+                          <View style={styles.dropdownUserInfo}>
+                            <Text style={styles.dropdownUserName}>{getUserName()}</Text>
+                            <Text style={styles.dropdownUserEmail}>{currentUser?.email}</Text>
+                          </View>
+                        </View>
+                        <View style={styles.dropdownDivider} />
+                        <TouchableOpacity style={styles.dropdownItem} onPress={handleSignOut}>
+                          <Text style={styles.dropdownItemText}>Sign Out</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </View>
+                </TouchableWithoutFeedback>
+              </Modal>
+            )}
+          </View>
+          <View style={styles.headerText}>
+            <Text style={styles.title}>Home Page</Text>
+            <Text style={styles.subtitle}>Welcome, {getUserName()} to the ABA Dashboard!</Text>
+          </View>
         </View>
       </View>
       
@@ -31,13 +99,13 @@ export default function HomeScreen({ navigation }) {
             clients.map((client, index) => (
               <TouchableOpacity
                 key={index}
-                style={styles.card}
+                style={[styles.card, styles.shadowSmall]}
                 onPress={() => handleClientPress(client)}
                 activeOpacity={0.7}
               >
-                <View style={styles.cardContent}>
-                  <View style={styles.profileIcon}>
-                    <Text style={styles.profileIconText}>
+                  <View style={styles.cardContent}>
+                  <View style={styles.profileIconLarge}>
+                    <Text style={styles.profileIconTextGray}>
                       {client.name.charAt(0).toUpperCase()}
                     </Text>
                   </View>
@@ -55,11 +123,11 @@ export default function HomeScreen({ navigation }) {
       </View>
       
       <View style={styles.addButtonContainer}>
-        <TouchableOpacity style={styles.addButton} onPress={handleCreateClient}>
+        <TouchableOpacity style={[styles.addButton, styles.shadowMedium]} onPress={handleCreateClient}>
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -69,12 +137,87 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
-    paddingTop: 60,
     paddingHorizontal: 20,
     paddingBottom: 24,
+    paddingTop: 10,
+    backgroundColor: '#f5f5f5',
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   headerText: {
     flex: 1,
+    marginLeft: 12,
+  },
+  profileButtonContainer: {
+    position: 'relative',
+  },
+  profileButton: {
+    marginTop: 4,
+  },
+  profileIconSmall: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#3b82f6',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileIconText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  dropdownOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    paddingTop: 60,
+    paddingLeft: 20,
+  },
+  dropdownMenu: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    minWidth: 200,
+  },
+  shadowMedium: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  dropdownHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+  },
+  dropdownUserInfo: {
+    flex: 1,
+  },
+  dropdownUserName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 2,
+  },
+  dropdownUserEmail: {
+    fontSize: 12,
+    color: '#6b7280',
+  },
+  dropdownDivider: {
+    height: 1,
+    backgroundColor: '#e5e7eb',
+  },
+  dropdownItem: {
+    padding: 16,
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    color: '#ef4444',
+    fontWeight: '500',
   },
   title: {
     fontSize: 32,
@@ -93,6 +236,20 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: 'center',
   },
+  shadowMedium: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 8,
+  },
+  shadowSmall: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   addButton: {
     backgroundColor: '#111827',
     width: 56,
@@ -100,11 +257,6 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 8,
   },
   addButtonText: {
     color: '#fff',
@@ -139,17 +291,12 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 12,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  profileIcon: {
+  profileIconLarge: {
     width: 50,
     height: 50,
     borderRadius: 25,
@@ -158,7 +305,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 16,
   },
-  profileIconText: {
+  profileIconTextGray: {
     fontSize: 20,
     fontWeight: '600',
     color: '#6b7280',

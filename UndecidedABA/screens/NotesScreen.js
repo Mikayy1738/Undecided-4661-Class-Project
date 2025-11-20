@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
-import { useTasks } from '../contexts/TasksContext';
+import { useTasks } from '../contexts';
 
 export default function NotesScreen({ route, navigation }) {
   const client = route.params?.client || { name: 'Individual Name', id: '' };
