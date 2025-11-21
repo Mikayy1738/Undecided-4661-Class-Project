@@ -1,7 +1,22 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal } from 'react-native';
+import { useClients, useTasks } from '../contexts';
 
 export default function ClientScreen({ route, navigation }) {
-  const client = route.params?.client || { name: 'Client', DOB: '', idNumber: '', insuranceProvider: '' };
+  const client = route.params?.client || { name: 'Client', DOB: '', idNumber: '', insuranceProvider: '', id: '' };
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const { deleteClient } = useClients();
+  const { clearClientTasks } = useTasks();
+
+  const handleDeleteClient = async () => {
+    setModalVisible(false);
+
+    await deleteClient(client.id);
+    clearClientTasks(client.id);
+
+    navigation.replace('Home');
+  };
 
   const handleNavigateToSessionTaskList = () => {
     navigation.navigate('SessionTaskList', { client });
@@ -25,12 +40,47 @@ export default function ClientScreen({ route, navigation }) {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Confirm Deletion</Text>
+            <Text style={styles.modalText}>
+              Are you sure you want to delete client **{client.name}**? This action cannot be undone.
+            </Text>
+            <View style={styles.modalButtonContainer}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalButtonCancel]}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.modalButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalButtonDelete]}
+                onPress={handleDeleteClient}
+              >
+                <Text style={[styles.modalButtonText, styles.modalButtonDeleteText]}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Text style={styles.backText}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Client</Text>
-        <View style={styles.placeholder} />
+        <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={styles.deleteClientButton}
+        >
+          <Text style={styles.deleteClientText}>🗑 Delete</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.clientInfoSection}>
@@ -124,8 +174,75 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#111827',
   },
-  placeholder: {
-    width: 40,
+  deleteClientButton: {
+    padding: 8,
+  },
+  deleteClientText: {
+    fontSize: 16,
+    color: '#ef4444',
+    fontWeight: '600',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: '80%',
+  },
+  modalTitle: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#111827',
+  },
+  modalText: {
+    marginBottom: 20,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#6b7280',
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  modalButton: {
+    borderRadius: 10,
+    padding: 10,
+    elevation: 2,
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  modalButtonCancel: {
+    backgroundColor: '#e5e7eb',
+  },
+  modalButtonDelete: {
+    backgroundColor: '#ef4444',
+  },
+  modalButtonText: {
+    color: '#111827',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  modalButtonDeleteText: {
+    color: 'white',
   },
   clientInfoSection: {
     backgroundColor: '#fff',
@@ -198,4 +315,3 @@ const styles = StyleSheet.create({
     color: '#6b7280',
   },
 });
-

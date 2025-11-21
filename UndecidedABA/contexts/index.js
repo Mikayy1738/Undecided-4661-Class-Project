@@ -72,7 +72,17 @@ const ClientsContextData = createContextProvider('Clients', (props) => {
     }
   };
 
-  return { clients, addClient };
+  const deleteClient = async (clientId) => {
+    const newClients = clients.filter(client => client.id !== clientId);
+    setClients(newClients);
+
+    if (currentUser?.email) {
+        await saveClients(currentUser.email, newClients);
+    }
+  };
+
+
+  return { clients, addClient, deleteClient };
 });
 
 export const ClientsProvider = ClientsContextData.Provider;
@@ -115,15 +125,22 @@ const TasksContextData = createContextProvider('Tasks', () => {
     }));
   };
 
+  const clearClientTasks = (clientId) => {
+    setClientTasks(prev => {
+      const { [clientId]: _, ...rest } = prev;
+      return rest;
+    });
+  };
+
   return {
     getTasks,
     setTasks,
     addTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    clearClientTasks
   };
 });
 
 export const TasksProvider = TasksContextData.Provider;
 export const useTasks = TasksContextData.useTasks;
-
