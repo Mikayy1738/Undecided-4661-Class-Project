@@ -8,6 +8,7 @@ export default function ClientScreen({ route, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const { deleteClient } = useClients();
   const { clearClientTasks } = useTasks();
+  const clientIndex = route.params?.index;
 
   const handleDeleteClient = async () => {
     setModalVisible(false);
@@ -19,23 +20,23 @@ export default function ClientScreen({ route, navigation }) {
   };
 
   const handleNavigateToSessionTaskList = () => {
-    navigation.navigate('SessionTaskList', { client });
+    navigation.navigate('SessionTaskList', { client, index: clientIndex });
   };
 
   const handleNavigateToNotes = () => {
-    navigation.navigate('Notes', { client });
+    navigation.navigate('Notes', { client, index: clientIndex });
   };
 
   const handleNavigateToGroupTracking = () => {
-    navigation.navigate('GroupTracking', { client });
+    navigation.navigate('GroupTracking', { client, index: clientIndex });
   };
 
   const handleNavigateToReports = () => {
-    navigation.navigate('Reports', { client });
+    navigation.navigate('Reports', { client, index: clientIndex });
   };
 
   const handleNavigateToGoals = () => {
-    navigation.navigate('Goals', { client });
+    navigation.navigate('Goals', { client, index: clientIndex });
   };
 
   return (

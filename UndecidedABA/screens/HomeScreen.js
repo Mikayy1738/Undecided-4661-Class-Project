@@ -24,8 +24,8 @@ export default function HomeScreen({ navigation }) {
     navigation.navigate('CreateClient');
   };
 
-  const handleClientPress = (client) => {
-    navigation.navigate('Client', { client });
+  const handleClientPress = (client, index) => {
+    navigation.navigate('Client', { client, index });
   };
 
   const handleSignOut = () => {
@@ -100,7 +100,7 @@ export default function HomeScreen({ navigation }) {
               <TouchableOpacity
                 key={index}
                 style={[styles.card, styles.shadowSmall]}
-                onPress={() => handleClientPress(client)}
+                onPress={() => handleClientPress(client,index)}
                 activeOpacity={0.7}
               >
                   <View style={styles.cardContent}>

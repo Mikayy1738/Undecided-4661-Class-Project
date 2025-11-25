@@ -98,3 +98,32 @@ export const loadClients = async (userId) => {
     return { success: false, error: 'Failed to load clients.', data: [] };
   }
 };
+
+export const submitSessionReport = async (userEmail, clientIndex, tasks, notes) => {
+  try {
+    const emailKey = userEmail.toLowerCase().replace(/[.#$[\]]/g, '_');
+
+    // FIXED timestamp (Firebase-safe)
+    const timestamp = Date.now().toString();
+
+    const payload = {
+      tasks: tasks || [],
+      notes: notes || '',
+      submittedAt: new Date().toISOString()
+    };
+
+    const url = `${firebase_url}users/${emailKey}/clients/${clientIndex}/sessionReports/${timestamp}.json`;
+
+    console.log("🔥 URL:", url);
+    console.log("🔥 PAYLOAD:", JSON.stringify(payload, null, 2));
+
+    await axios.put(url, payload);
+
+    return { success: true };
+  } catch (error) {
+    console.log("🔥 FULL ERROR:", JSON.stringify(error, null, 2));
+    return { success: false, error: "Failed to submit session report." };
+  }
+};
+
+
