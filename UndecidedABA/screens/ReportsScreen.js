@@ -44,7 +44,6 @@ export default function ReportsScreen({ route, navigation }) {
       setLoading(false);
 
     } catch (error) {
-      console.log("LOAD REPORTS ERROR:", error);
       setReports([]);
       setLoading(false);
     }

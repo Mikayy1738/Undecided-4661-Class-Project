@@ -114,14 +114,10 @@ export const submitSessionReport = async (userEmail, clientIndex, tasks, notes) 
 
     const url = `${firebase_url}users/${emailKey}/clients/${clientIndex}/sessionReports/${timestamp}.json`;
 
-    console.log("🔥 URL:", url);
-    console.log("🔥 PAYLOAD:", JSON.stringify(payload, null, 2));
-
     await axios.put(url, payload);
 
     return { success: true };
   } catch (error) {
-    console.log("🔥 FULL ERROR:", JSON.stringify(error, null, 2));
     return { success: false, error: "Failed to submit session report." };
   }
 };

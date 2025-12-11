@@ -86,12 +86,6 @@ export default function SessionTaskListScreen({ route, navigation }) {
       return;
     }
 
-    console.log("SUBMIT DEBUG:", {
-      email: currentUser?.email,
-      clientIndex: clientIndex,
-      tasks,
-      notes
-    });
     
   
     const result = await submitSessionReport(
@@ -102,6 +96,13 @@ export default function SessionTaskListScreen({ route, navigation }) {
     );
   
     if (result.success) {
+  setLocalTasks([]);
+  setTasks(client.id, []);
+  setNotes('');
+  setEditingTaskId(null);
+  setEditingTaskName('');
+  setNewTaskName('');
+  setNextTaskId(1);
       alert("Session report submitted!");
       navigation.goBack();
     } else {
