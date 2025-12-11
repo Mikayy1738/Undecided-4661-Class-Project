@@ -103,7 +103,6 @@ export const submitSessionReport = async (userEmail, clientIndex, tasks, notes) 
   try {
     const emailKey = userEmail.toLowerCase().replace(/[.#$[\]]/g, '_');
 
-    // FIXED timestamp (Firebase-safe)
     const timestamp = Date.now().toString();
 
     const payload = {

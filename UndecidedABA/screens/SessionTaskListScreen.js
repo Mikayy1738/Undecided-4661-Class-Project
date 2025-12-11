@@ -103,8 +103,7 @@ export default function SessionTaskListScreen({ route, navigation }) {
   setEditingTaskName('');
   setNewTaskName('');
   setNextTaskId(1);
-      alert("Session report submitted!");
-      navigation.goBack();
+      navigation.navigate('Reports', { client: client, index: clientIndex });
     } else {
       alert(result.error || "Failed to submit session report.");
     }
@@ -122,7 +121,7 @@ export default function SessionTaskListScreen({ route, navigation }) {
       </View>
 
       <View style={styles.sessionSection}>
-        <Text style={styles.sessionLabel}>Session: {client.name}</Text>
+        <Text style={styles.sessionLabel}>Session: {client.name} </Text>
       </View>
 
       <View style={styles.tasksSection}>

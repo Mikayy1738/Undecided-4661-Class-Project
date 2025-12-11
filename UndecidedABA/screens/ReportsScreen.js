@@ -37,7 +37,6 @@ export default function ReportsScreen({ route, navigation }) {
         ...res.data[key]
       }));
 
-      // Sort newest → oldest
       reportArray.sort((a, b) => b.submittedAt.localeCompare(a.submittedAt));
 
       setReports(reportArray);
