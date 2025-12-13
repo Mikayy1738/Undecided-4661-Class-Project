@@ -84,8 +84,8 @@ export default function HomeScreen({ navigation }) {
             )}
           </View>
           <View style={styles.headerText}>
-            <Text style={styles.title}>Home Page</Text>
-            <Text style={styles.subtitle}>Welcome, {getUserName()} to the ABA Dashboard!</Text>
+            <Text style={styles.title}> ABA Dashboard</Text>
+            <Text style={styles.subtitle}>Welcome, {getUserName()}</Text>
           </View>
         </View>
       </View>
@@ -224,10 +224,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#111827',
     marginBottom: 8,
+    alignSelf: 'center',
   },
   subtitle: {
     fontSize: 18,
     color: '#6b7280',
+    alignSelf: 'center',
   },
   addButtonContainer: {
     position: 'absolute',

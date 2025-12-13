@@ -3,6 +3,11 @@ import { View, Text, TouchableOpacity, StyleSheet, TextInput, ActivityIndicator 
 import { signUpWithEmailAndPassword } from '../api/firebase';
 import { useAuth } from '../contexts';
 
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 export default function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,6 +24,10 @@ export default function SignUpScreen({ navigation }) {
 
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
+      return;
+    }
+    if (!isValidEmail(email.trim())) {
+      setError('Please enter a valid email address.');
       return;
     }
 

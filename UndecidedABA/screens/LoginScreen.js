@@ -40,7 +40,7 @@ export default function LoginScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="Email"
-          placeholderTextColor="#9ca3af"
+          placeholderTextColor="#9caf9dff"
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#466effff',
     paddingHorizontal: 20,
   },
   title: {
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
-    color: '#6b7280',
+    color: '#000000ff',
     marginBottom: 32,
     textAlign: 'center',
   },
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   },
   signUpLinkText: {
     fontSize: 14,
-    color: '#3b82f6',
+    color: '#fafafaff',
     textDecorationLine: 'underline',
   },
 });

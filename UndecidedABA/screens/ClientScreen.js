@@ -99,7 +99,7 @@ export default function ClientScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'rgba(255, 151, 151, 1)',
   },
   content: {
     paddingBottom: 40,
