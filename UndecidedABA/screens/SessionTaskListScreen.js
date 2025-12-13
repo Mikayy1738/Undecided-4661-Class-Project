@@ -1,6 +1,9 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useTasks } from '../contexts';
+import { submitSessionReport } from '../api/firebase';
+import { useAuth } from '../contexts';
+
 
 export default function SessionTaskListScreen({ route, navigation }) {
   const client = route.params?.client || { name: 'Individual Name', id: '' };
@@ -11,6 +14,8 @@ export default function SessionTaskListScreen({ route, navigation }) {
   const [editingTaskName, setEditingTaskName] = useState('');
   const [newTaskName, setNewTaskName] = useState('');
   const [nextTaskId, setNextTaskId] = useState(1);
+  const { currentUser } = useAuth();
+  const clientIndex = route.params?.index;
 
   useEffect(() => {
     const clientTasks = getTasks(client.id);
@@ -75,9 +80,35 @@ export default function SessionTaskListScreen({ route, navigation }) {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!currentUser?.email) {
+      alert("Error: No logged-in user found.");
+      return;
+    }
+
     
+  
+    const result = await submitSessionReport(
+      currentUser.email,
+      clientIndex,
+      tasks,
+      notes
+    );
+  
+    if (result.success) {
+  setLocalTasks([]);
+  setTasks(client.id, []);
+  setNotes('');
+  setEditingTaskId(null);
+  setEditingTaskName('');
+  setNewTaskName('');
+  setNextTaskId(1);
+      navigation.navigate('Reports', { client: client, index: clientIndex });
+    } else {
+      alert(result.error || "Failed to submit session report.");
+    }
   };
+  
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -90,7 +121,7 @@ export default function SessionTaskListScreen({ route, navigation }) {
       </View>
 
       <View style={styles.sessionSection}>
-        <Text style={styles.sessionLabel}>Session: {client.name}</Text>
+        <Text style={styles.sessionLabel}>Session: {client.name} </Text>
       </View>
 
       <View style={styles.tasksSection}>
