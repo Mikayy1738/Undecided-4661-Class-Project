@@ -24,8 +24,8 @@ export default function HomeScreen({ navigation }) {
     navigation.navigate('CreateClient');
   };
 
-  const handleClientPress = (client) => {
-    navigation.navigate('Client', { client });
+  const handleClientPress = (client, index) => {
+    navigation.navigate('Client', { client, index });
   };
 
   const handleSignOut = () => {
@@ -84,8 +84,8 @@ export default function HomeScreen({ navigation }) {
             )}
           </View>
           <View style={styles.headerText}>
-            <Text style={styles.title}>Home Page</Text>
-            <Text style={styles.subtitle}>Welcome, {getUserName()} to the ABA Dashboard!</Text>
+            <Text style={styles.title}> ABA Dashboard</Text>
+            <Text style={styles.subtitle}>Welcome, {getUserName()}</Text>
           </View>
         </View>
       </View>
@@ -100,7 +100,7 @@ export default function HomeScreen({ navigation }) {
               <TouchableOpacity
                 key={index}
                 style={[styles.card, styles.shadowSmall]}
-                onPress={() => handleClientPress(client)}
+                onPress={() => handleClientPress(client,index)}
                 activeOpacity={0.7}
               >
                   <View style={styles.cardContent}>
@@ -224,10 +224,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#111827',
     marginBottom: 8,
+    alignSelf: 'center',
   },
   subtitle: {
     fontSize: 18,
     color: '#6b7280',
+    alignSelf: 'center',
   },
   addButtonContainer: {
     position: 'absolute',
